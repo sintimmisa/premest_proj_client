@@ -1,5 +1,11 @@
 import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
+import isEmpty from 'validator/lib/isEmpty';
+import isEmail from 'validator/lib/isEmail';
+import equals from 'validator/lib/equals';
+import ErrorMsg from '../Alerts/errorMsg';
+import SuccessMsg from '../Alerts/successMsg';
+//import Swal from 'sweetalert2'
 
 
 const ShowRegistrationForm =()=>{
@@ -52,6 +58,9 @@ const ShowRegistrationForm =()=>{
           setFormData({
               ...formData,
               [name]:value,
+              //reset  error and successs msg
+              successMsg:'',
+              errorMsg:''
           });
           //Check if event handler works
           //console.log(formData);
@@ -62,17 +71,46 @@ const ShowRegistrationForm =()=>{
        * Event Handler to handle form submission
        * @params evt
        *  add evt.preventDefault behavour to reload form on submit
+       *  Add client side validation with validator{equals,isEmail and isEmpty}
        */
       const handleSubmit=(evt)=>{
           evt.preventDefault();
           console.log(formData);
+        
+          /**
+           * form validaion
+           * if all field are empty return update state and set errorMsg */
+
+         if(isEmpty(username) || isEmpty(email) || isEmpty(password) || isEmpty(password2)){
+              setFormData({
+                  ...formData, errorMsg:"All fields are required."
+              })
+
+          }else if (!isEmail(email)){
+              setFormData({
+                  ...formData, errorMsg:"Email is Invalid!."
+              })
+
+          }else if(!equals(password,password2)){
+              setFormData({
+                  ...formData, errorMsg:"Password do not match!."
+              })
+          }else{
+              //Success 
+              setFormData({
+                  ...formData, successMsg:"Account Succesffully Created."
+              });
+          }
+
 
       }
     
 
     return(
        <div className="container"> 
-            <form className="registration-form" onSubmit={handleSubmit}>
+       {errorMsg && ErrorMsg(errorMsg)}
+       {successMsg && SuccessMsg(successMsg)}
+            <form className="registration-form" onSubmit={handleSubmit} noValidate>
             <div className="form-group input-group">
                 <div className="input-group-prepend">
                     <span className="input-group-text">
