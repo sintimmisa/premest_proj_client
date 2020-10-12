@@ -6,24 +6,25 @@ import equals from 'validator/lib/equals';
 import ErrorMsg from '../Alerts/errorMsg';
 import SuccessMsg from '../Alerts/successMsg';
 import Loading from '../Loading/loading';
+import register from '../../auth/Register';//Http request for registration form
 //import Swal from 'sweetalert2'
 
 
 const ShowRegistrationForm =()=>{
      /**
      * UseState hooks to manage components state
-     * @params {formData }  handle initialState
-     * @params {setformData} handle new state
+     * @params {inputValue }  handle initialState
+     * @params {setInputValue} handle new state
      * 
-     * Destracture initalS  state and assign to formData
+     * Destracture initalS  state and assign to inputValue
      */
 
-     const [formData,setFormData] = useState({
+     const [inputValue,setInputValue] = useState({
          username:'',
          email:'',
          password:'',
          password2:'',
-         loading:true,
+         loading:false,
          successMsg:false,
          errorMsg:false
      });
@@ -35,7 +36,7 @@ const ShowRegistrationForm =()=>{
       */
      const {
          username,email,password,password2,loading,successMsg,errorMsg
-     }=formData;
+     }=inputValue;
 
 
 
@@ -45,7 +46,7 @@ const ShowRegistrationForm =()=>{
      /**
       * Event Handler to handdle changes in the text field
       * @param event obj {evt}
-      * @returns setFormData to update state
+      * @returns setInputValue to update state
       * @Use target property in evt obj to get name:"value"
       * 
       */
@@ -56,15 +57,16 @@ const ShowRegistrationForm =()=>{
           const {name,value}=evt.target;
 
         //Update states
-          setFormData({
-              ...formData,
+          setInputValue({
+              ...inputValue,
               [name]:value,
               //reset  error and successs msg
               successMsg:'',
-              errorMsg:''
+              errorMsg:'',
+              loading:false
           });
           //Check if event handler works
-          //console.log(formData);
+          //console.log(inputValue);
 
       }
 
@@ -76,31 +78,60 @@ const ShowRegistrationForm =()=>{
        */
       const handleSubmit=(evt)=>{
           evt.preventDefault();
-          console.log(formData);
+          console.log(inputValue);
         
           /**
            * form validaion
            * if all field are empty return update state and set errorMsg */
 
          if(isEmpty(username) || isEmpty(email) || isEmpty(password) || isEmpty(password2)){
-              setFormData({
-                  ...formData, errorMsg:"All fields are required."
+              setInputValue({
+                  ...inputValue, errorMsg:"All fields are required."
               })
 
           }else if (!isEmail(email)){
-              setFormData({
-                  ...formData, errorMsg:"Email is Invalid!."
+              setInputValue({
+                  ...inputValue, errorMsg:"Email is Invalid!."
               })
 
           }else if(!equals(password,password2)){
-              setFormData({
-                  ...formData, errorMsg:"Password do not match!."
+              setInputValue({
+                  ...inputValue, errorMsg:"Password do not match!."
               })
           }else{
-              //Success 
-              setFormData({
-                  ...formData, successMsg:"Account Succesffully Created."
+              /**
+               * On Success
+               * @get relevant data {username,email,password}
+               * @set loading {true}
+               * @set successMsg {Success}*/ 
+
+               const {username,email,password}=inputValue;
+               const data ={username,email,password};
+
+              setInputValue({
+                  ...inputValue, loading:true
               });
+
+              register(data).then((res)=>{
+                  console.log(res)
+
+                   setInputValue({
+                       username:'',
+                        email:'',
+                        password:'',
+                        password2:'',
+                        loading:false,
+                        successMsg:res.data.successMessage
+                        
+                 
+              });
+              }).catch((err)=>{
+                  console.log("Registration Error", err)
+                  setInputValue({
+                  ...inputValue, loading:false, errorMsg:"Account could not be created!"
+              });
+
+              })
           }
 
 
@@ -108,10 +139,11 @@ const ShowRegistrationForm =()=>{
     
 
     return(
-       <div className="container"> 
+       <div className="container">
+           {loading && Loading()} 
        {errorMsg && ErrorMsg(errorMsg)}
        {successMsg && SuccessMsg(successMsg)}
-       {loading && Loading()}
+       
             <form className="registration-form" onSubmit={handleSubmit} noValidate>
             <div className="form-group input-group">
                 <div className="input-group-prepend">
@@ -155,7 +187,7 @@ const ShowRegistrationForm =()=>{
 
         </form>
         {/**Test is states is workig */}
-                   {JSON.stringify(formData)}
+                   {JSON.stringify(inputValue)}
        </div>
             
        
