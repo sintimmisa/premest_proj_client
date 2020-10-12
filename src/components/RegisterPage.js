@@ -11,7 +11,7 @@ const RegisterPage=()=>{
 
     return(
         <div className="container">
-            <div className="row px-3 vh-100">
+            <div className="row px-3 py-5 mh-100 ">
                 <div className="col-md-6  mx-auto align-self-center">
                    <ShowRegistrationForm/> 
                    

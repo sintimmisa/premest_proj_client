@@ -5,6 +5,7 @@ import isEmail from 'validator/lib/isEmail';
 import equals from 'validator/lib/equals';
 import ErrorMsg from '../Alerts/errorMsg';
 import SuccessMsg from '../Alerts/successMsg';
+import Loading from '../Loading/loading';
 //import Swal from 'sweetalert2'
 
 
@@ -22,7 +23,7 @@ const ShowRegistrationForm =()=>{
          email:'',
          password:'',
          password2:'',
-         loading:false,
+         loading:true,
          successMsg:false,
          errorMsg:false
      });
@@ -110,6 +111,7 @@ const ShowRegistrationForm =()=>{
        <div className="container"> 
        {errorMsg && ErrorMsg(errorMsg)}
        {successMsg && SuccessMsg(successMsg)}
+       {loading && Loading()}
             <form className="registration-form" onSubmit={handleSubmit} noValidate>
             <div className="form-group input-group">
                 <div className="input-group-prepend">
