@@ -1,9 +1,34 @@
-import React from 'react';
+import React,{useState} from 'react';
 import ShowRegistrationForm from './Forms/ShowRegistrationForm';
 
 
-
+/**
+ * component for returning user registration form
+ */
 const RegisterPage=()=>{
+
+    /**
+     * UseState hooks to manage components state
+     * @params {formData }  handle initialState
+     * @params {setformData} handle new state
+     * 
+     * Destracture initalS  state and assign to formData
+     */
+
+     const [formData,setFormData] = useState({
+         username:'',
+         email:'',
+         password:'',
+         password2:'',
+         loading:false,
+         successMsg:false,
+         errorMsg:false
+     });
+
+     //Destracture state
+     const {
+         username,email,password,password2,loading,successMsg,errorMsg
+     }=formData;
 
     
 
