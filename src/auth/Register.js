@@ -12,12 +12,12 @@ const register= async(data)=>{
             'Content-Type':'application/json'
         }
     }
-    const responseData= await axios.post('/api/auth/register',data, config);
+    const response= await axios.post('/api/auth/register',data, config);
 
 
-    return(
-    {responseData}
-    )
+    return response
+    
+    
 
 
 }

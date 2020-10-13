@@ -112,8 +112,9 @@ const ShowRegistrationForm =()=>{
                   ...inputValue, loading:true
               });
 
-              register(data).then((res)=>{
-                  console.log(res)
+              register(data)
+                .then((response)=>{
+                  console.log(response)
 
                    setInputValue({
                        username:'',
@@ -121,21 +122,25 @@ const ShowRegistrationForm =()=>{
                         password:'',
                         password2:'',
                         loading:false,
-                        successMsg:res.data.successMessage
+                        successMsg:response.data.successMessage,
                         
                  
               });
-              }).catch((err)=>{
-                  console.log("Registration Error", err)
+              })
+              .catch((err)=>{
+                  console.log("Registration Error", err);
                   setInputValue({
-                  ...inputValue, loading:false, errorMsg:"Account could not be created!"
+                      
+                  ...inputValue, 
+                  loading:false, 
+                  errorMsg:err.response.data.errorMessage,
               });
 
-              })
+              });
           }
 
 
-      }
+      };
     
 
     return(
@@ -186,8 +191,7 @@ const ShowRegistrationForm =()=>{
                 
 
         </form>
-        {/**Test is states is workig */}
-                   {JSON.stringify(inputValue)}
+       
        </div>
             
        
