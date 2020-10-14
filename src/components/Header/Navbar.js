@@ -1,11 +1,26 @@
  
- import React from 'react';
+ import React, { Fragment } from 'react';
  import {Link,withRouter} from 'react-router-dom';
-import { isAuthenticated } from '../../utils/auth';
+import { isAuthenticated, logout } from '../../utils/auth';
  
  
  
-const Navbar=()=>{
+const Navbar=({history})=>{
+
+
+    /**
+     * Function to handle logout on click
+     * @param {*} evt 
+     * call logout function
+     * make use of the history prop in withRouter
+     */
+    const handleLogout=(evt)=>{
+        logout(()=>{
+            history.push('/register');
+            console.log("logout");
+        })
+        
+    }
 
      return(
          <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -18,7 +33,7 @@ const Navbar=()=>{
             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
                     {!isAuthenticated() &&(
-                        <div>
+                        <Fragment>
                             <li className="nav-item ">
                         <Link className="nav-link" to="">Home <span className="sr-only"></span></Link>
                     </li>
@@ -29,32 +44,32 @@ const Navbar=()=>{
                         <Link className="nav-link" to="/login">Login</Link>
                     </li>
      
-                        </div>
+                        </Fragment>
                     )}
                      {isAuthenticated() && isAuthenticated().role===1 &&(
-                        <div>
+                        <Fragment>
                             <li className="nav-item ">
                         <Link className="nav-link" to="/admin/dashboard">Dashboard<span className="sr-only"></span></Link>
                     </li>
                           
-                        </div>
+                        </Fragment>
                     )}
                       {isAuthenticated() && isAuthenticated().role===0 &&(
-                        <div>
+                        <Fragment>
                             <li className="nav-item ">
                         <Link className="nav-link" to="/user/dashboard">Dashboard<span className="sr-only"></span></Link>
                     </li>
                           
-                        </div>
+                        </Fragment>
                     )}
 
                      {isAuthenticated() &&(
-                        <div>
+                        <Fragment>
                             <li className="nav-item ">
-                        <Link className="nav-link" to="/user/logout">Logout<span className="sr-only"></span></Link>
+                        <button className=" btn btn-link pl-0 text-secondary text-decoration-none" type="button" onClick={handleLogout}>Logout<span className="sr-only"></span></button>
                     </li>
                           
-                        </div>
+                        </Fragment>
                     )}
                      
                 </ul>

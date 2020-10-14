@@ -1,5 +1,5 @@
-import { setCookie,getCookie } from "./Cookie"
-import { getLocalStorage, setLocalStorage } from "./LocalStorage";
+import { setCookie,getCookie, deleteCookie } from "./Cookie"
+import { deleteLocalStorage, getLocalStorage, setLocalStorage } from "./LocalStorage";
 
 
 /**
@@ -25,4 +25,11 @@ export const isAuthenticated=()=>{
         return false
     }
 
+}
+
+export const logout=(next)=>{
+    deleteCookie('token');
+    deleteLocalStorage('user');
+
+    next();
 }
