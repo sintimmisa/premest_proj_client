@@ -1,5 +1,5 @@
-import { setCookie } from "./Cookie"
-import { setLocalStorage } from "./LocalStorage";
+import { setCookie,getCookie } from "./Cookie"
+import { getLocalStorage, setLocalStorage } from "./LocalStorage";
 
 
 /**
@@ -10,4 +10,19 @@ import { setLocalStorage } from "./LocalStorage";
 export const setAuth=(token,user)=>{
     setCookie("token",token);
     setLocalStorage("user",user);
+}
+
+/**
+ * Set is Authenticated function check if token and uer obj are set 
+ * @return {user} obj from localStorage
+ * @else return {false}
+ */
+
+export const isAuthenticated=()=>{
+    if (getCookie('token') && getLocalStorage('user')){
+        return getLocalStorage('user')
+    }else{
+        return false
+    }
+
 }

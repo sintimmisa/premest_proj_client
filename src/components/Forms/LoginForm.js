@@ -5,7 +5,7 @@ import Loading from '../Loading/loading';
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 import Login from '../../auth/Login';
-import {setAuth} from '../../utils/auth';
+import {isAuthenticated, setAuth} from '../../utils/auth';
 
 const LoginForm =()=>{
      /**
@@ -21,7 +21,7 @@ const LoginForm =()=>{
          password:'',
          loading:false,
          errorMsg:false,
-         redirect:false
+         //redirect:false
      });
 
      const {
@@ -29,7 +29,7 @@ const LoginForm =()=>{
          password,
          loading,
          errorMsg,
-         redirect
+        /// redirect
      } = inputValue
 
 
@@ -53,7 +53,7 @@ const LoginForm =()=>{
         */
       const handleSubmit=(evt)=>{
           evt.preventDefault();
-          console.log(inputValue);
+         // console.log(inputValue);
 
            /**
            * form validaion
@@ -85,7 +85,17 @@ const LoginForm =()=>{
 
               Login(data)
              .then((response)=>{
+                 //place token and user obj in localstorage
                   setAuth(response.data.token,response.data.user);
+
+                // check if the login details isAuth and redirect to dashboad
+                if(isAuthenticated() && isAuthenticated().role===1 ){
+                    console.log("redirect to admin dashboard");
+                }
+                else{
+                    console.log("redirect to User(seller) dashboard");
+                }
+                
 
               })
               .catch((err)=>{
