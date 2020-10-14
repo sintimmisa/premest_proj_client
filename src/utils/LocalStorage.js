@@ -6,15 +6,15 @@
  */
 
 
-exports.setLocalStorage=(key,value)=>{
+export  const setLocalStorage=(key,value)=>{
     localStorage.setItem(key,JSON.stringify(value));
 }
 
 
-exports.getLocalStorage=(key)=>{
+export const getLocalStorage=(key)=>{
     return JSON.parse(localStorage.getItem(key));
 }
 
-exports.deleteLocalStorage=(key)=>{
+export const deleteLocalStorage=(key)=>{
     localStorage.removeItem(key);
 }

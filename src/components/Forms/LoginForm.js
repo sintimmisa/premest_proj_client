@@ -5,7 +5,7 @@ import Loading from '../Loading/loading';
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 import Login from '../../auth/Login';
-
+import {setAuth} from '../../utils/auth';
 
 const LoginForm =()=>{
      /**
@@ -83,7 +83,14 @@ const LoginForm =()=>{
                   ...inputValue, loading:true
               }); 
 
-              Login(data);
+              Login(data)
+             .then((response)=>{
+                  setAuth(response.data.token,response.data.user);
+
+              })
+              .catch((err)=>{
+                  console.log("Login api reques error: ",err);
+              })
 
          
         }
