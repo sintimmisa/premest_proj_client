@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import {Link} from 'react-router-dom';
+import React,{useState,useEffect} from 'react';
+import {Link,useHistory} from 'react-router-dom';
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
 import equals from 'validator/lib/equals';
@@ -7,10 +7,13 @@ import ErrorMsg from '../Alerts/errorMsg';
 import SuccessMsg from '../Alerts/successMsg';
 import Loading from '../Loading/loading';
 import register from '../../auth/Register';//Http request for registration form
+import { isAuthenticated } from '../../utils/auth';
 //import Swal from 'sweetalert2'
 
 
 const ShowRegistrationForm =()=>{
+
+    const history =useHistory();
      /**
      * UseState hooks to manage components state
      * @params {inputValue }  handle initialState
@@ -28,6 +31,18 @@ const ShowRegistrationForm =()=>{
          successMsg:false,
          errorMsg:false
      });
+
+     useEffect(() => {
+          if(isAuthenticated() && isAuthenticated().role===1 ){
+                 
+                    history.push('/admin/dashboard');
+                }
+                else if(isAuthenticated() && isAuthenticated().role===0){
+                    
+                    history.push('/user/dashboard');
+                }
+         
+     }, [history])
 
      /**
       * Destracture state

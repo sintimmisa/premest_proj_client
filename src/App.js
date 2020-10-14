@@ -11,6 +11,8 @@ import HomePage from './components/HomePage';
 import RegisterPage from './components/RegisterPage';
 import LoginPage from './components/LoginPage';
 import NotFoundPage from './components/NotFoundPage';
+import AdminDashboard from './components/Dashboard/Admin';
+import UserDashboard from './components/Dashboard/User';
 
 
 
@@ -24,6 +26,8 @@ function App() {
         <Route exact path='/' component={HomePage}/>
         <Route exact path='/register' component={RegisterPage}/>
         <Route exact path='/login' component={LoginPage}/>
+        <Route exact path='/admin/dashboard' component={AdminDashboard}/>
+        <Route exact path='/user/dashboard' component={UserDashboard}/>
         <Route  component={NotFoundPage}/>
       </Switch>
       </div>

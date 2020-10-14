@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import {Link} from 'react-router-dom';
+import React,{useState, useEffect} from 'react';
+import {Link, useHistory} from 'react-router-dom';
 import ErrorMsg from '../Alerts/errorMsg';
 import Loading from '../Loading/loading';
 import isEmpty from 'validator/lib/isEmpty';
@@ -23,6 +23,22 @@ const LoginForm =()=>{
          errorMsg:false,
          //redirect:false
      });
+
+     //UseState is used to access history obj which is used to re-route using push meth
+     const history =useHistory();
+
+
+     useEffect(() => {
+          if(isAuthenticated() && isAuthenticated().role===1 ){
+                 
+                    history.push('/admin/dashboard');
+                }
+                else if(isAuthenticated() && isAuthenticated().role===0){
+                    
+                    history.push('/user/dashboard');
+                }
+         
+     }, [history])
 
      const {
          email,
@@ -91,9 +107,11 @@ const LoginForm =()=>{
                 // check if the login details isAuth and redirect to dashboad
                 if(isAuthenticated() && isAuthenticated().role===1 ){
                     console.log("redirect to admin dashboard");
+                    history.push('/admin/dashboard');
                 }
                 else{
                     console.log("redirect to User(seller) dashboard");
+                    history.push('/user/dashboard');
                 }
                 
 
