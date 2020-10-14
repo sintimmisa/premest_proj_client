@@ -2,6 +2,9 @@ import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
 import ErrorMsg from '../Alerts/errorMsg';
 import Loading from '../Loading/loading';
+import isEmpty from 'validator/lib/isEmpty';
+import isEmail from 'validator/lib/isEmail';
+import Login from '../../auth/Login';
 
 
 const LoginForm =()=>{
@@ -14,7 +17,6 @@ const LoginForm =()=>{
      */
 
      const [inputValue,setInputValue] = useState({
-         username:'',
          email:'',
          password:'',
          loading:false,
@@ -23,7 +25,6 @@ const LoginForm =()=>{
      });
 
      const {
-         username,
          email,
          password,
          loading,
@@ -53,13 +54,44 @@ const LoginForm =()=>{
       const handleSubmit=(evt)=>{
           evt.preventDefault();
           console.log(inputValue);
-        
+
+           /**
+           * form validaion
+           * if all field are empty return update state and set errorMsg */
+
+         if(isEmpty(email) || isEmpty(password)){
+              setInputValue({
+                  ...inputValue, errorMsg:"All fields are required."
+              })
+
+          }else if (!isEmail(email)){
+              setInputValue({
+                  ...inputValue, errorMsg:"Email is Invalid!."
+              })
+
+          }else{
+              /**
+               * On Success
+               * @get relevant data {username,email,password}
+               * @set loading {true}
+               */
+
+               const {email,password}=inputValue;
+               const data ={email,password};
+
+              setInputValue({
+                  ...inputValue, loading:true
+              }); 
+
+              Login(data);
+
          
         }
+    }
     return(
        <div className="container">
            
-       
+        {loading && Loading()} 
             <form className="login-form" onSubmit={handleSubmit} noValidate>
             
 
@@ -84,7 +116,7 @@ const LoginForm =()=>{
                 
                 <button name=""className="btn btn-primary btn-block" placeholder="Username" type="submit"> Login</button>
             </div> 
-            <p className="text-center "> Don't have an account? <Link to ="/login">Register Here</Link></p>
+            <p className="text-center "> Don't have an account? <Link to ="/register">Register Here</Link></p>
                 
 
         </form>
