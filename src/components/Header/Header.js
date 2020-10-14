@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ShowNavbar from './ShowNavbar';
+import Navbar from './Navbar';
 
 
 
@@ -10,7 +10,7 @@ const Header =()=>{
 
     return(
         <div className="header">
-            <ShowNavbar/>
+            <Navbar/>
         </div>
 
     );
