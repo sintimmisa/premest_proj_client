@@ -19,6 +19,7 @@ import UserRoute from './components/ProtectedRoutes/UserRoute';
 
 
 
+
 function App() {
   return (
     <Router>
@@ -30,6 +31,7 @@ function App() {
         <Route exact path='/login' component={LoginPage}/>
         <AdminRoute exact path='/admin/dashboard' component={AdminDashboard}/>
         <UserRoute exact path='/user/dashboard' component={UserDashboard}/>
+       
         <Route  component={NotFoundPage}/>
       </Switch>
       </div>

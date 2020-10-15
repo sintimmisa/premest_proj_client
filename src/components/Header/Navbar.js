@@ -16,7 +16,7 @@ const Navbar=({history})=>{
      */
     const handleLogout=(evt)=>{
         logout(()=>{
-            history.push('/register');
+            history.push('/login');
             console.log("logout");
         })
         
@@ -51,6 +51,7 @@ const Navbar=({history})=>{
                             <li className="nav-item ">
                         <Link className="nav-link" to="/admin/dashboard">Dashboard<span className="sr-only"></span></Link>
                     </li>
+                   
                           
                         </Fragment>
                     )}
@@ -59,6 +60,8 @@ const Navbar=({history})=>{
                             <li className="nav-item ">
                         <Link className="nav-link" to="/user/dashboard">Dashboard<span className="sr-only"></span></Link>
                     </li>
+                    
+                    
                           
                         </Fragment>
                     )}
