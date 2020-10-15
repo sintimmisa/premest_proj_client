@@ -1,12 +1,16 @@
-import React from 'react';
+import React,{useState} from 'react';
 import WelcomeAdmin from './WelcomeAdmin';
 
 
 
 const AdminDashboard=()=>{
+    /**
+     * Setup Category state
+     */
+    const [category,setCategory] =useState('');
 
 
-    
+
 
     const actionBtns=()=>(
          <div className="bg-light">
