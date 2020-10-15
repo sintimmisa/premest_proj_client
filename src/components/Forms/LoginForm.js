@@ -21,7 +21,7 @@ const LoginForm =()=>{
          password:'',
          loading:false,
          errorMsg:false,
-         //redirect:false
+         
      });
 
      //UseState is used to access history obj which is used to re-route using push meth
@@ -45,7 +45,7 @@ const LoginForm =()=>{
          password,
          loading,
          errorMsg,
-        /// redirect
+        
      } = inputValue
 
 
@@ -117,7 +117,10 @@ const LoginForm =()=>{
 
               })
               .catch((err)=>{
-                  console.log("Login api reques error: ",err);
+                  console.log("Login api request error: ",err);
+                  setInputValue({
+                      ...inputValue, loading:false, errorMsg:err.response.data.errorMessage,  
+                  })
               })
 
          
@@ -127,6 +130,7 @@ const LoginForm =()=>{
        <div className="container">
            
         {loading && Loading()} 
+        {errorMsg && ErrorMsg(errorMsg)}
             <form className="login-form" onSubmit={handleSubmit} noValidate>
             
 
