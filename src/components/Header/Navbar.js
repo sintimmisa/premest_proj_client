@@ -25,7 +25,7 @@ const Navbar=({history})=>{
      return(
          <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
-            <Link className="navbar-brand" to="/">VegOnline Store</Link>
+            <Link className="navbar-brand" to="/">Online Store</Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
