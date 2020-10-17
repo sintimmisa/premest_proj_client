@@ -6,13 +6,13 @@ import axios from 'axios';
  * @request data from api with axios
  */
 
-const Login= async(data)=>{
+const  createCategory= async(data)=>{
     const config={
         headers:{
             'Content-Type':'application/json'
         }
     }
-    const response= await axios.post('/api/auth/login',data, config);
+    const response= await axios.post('/api/category',data, config);
 
 
     return response
@@ -21,4 +21,4 @@ const Login= async(data)=>{
 
 
 }
-export default Login;
+export default createCategory;

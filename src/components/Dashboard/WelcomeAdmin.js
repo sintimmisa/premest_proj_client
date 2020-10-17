@@ -9,7 +9,7 @@ const WelcomeAdmin=()=>{
             <div className=" container ">
                 <div className="row ">
                     <div className="col-md-6">
-                        <h6> Welcome Admin Dashboard</h6>
+                        <h6> Welcome back</h6>
                     </div>
 
                 </div>

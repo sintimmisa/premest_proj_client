@@ -6,7 +6,7 @@ import equals from 'validator/lib/equals';
 import ErrorMsg from '../Alerts/errorMsg';
 import SuccessMsg from '../Alerts/successMsg';
 import Loading from '../Loading/loading';
-import register from '../../auth/Register';//Http request for registration form
+import register from '../../Api/Register';//Http request for registration form
 import { isAuthenticated } from '../../utils/auth';
 //import Swal from 'sweetalert2'
 
@@ -126,11 +126,11 @@ const ShowRegistrationForm =()=>{
               setInputValue({
                   ...inputValue, loading:true
               });
-
+              //call to the backend
               register(data)
                 .then((response)=>{
                   console.log(response)
-
+                    //reset the input field to the initial state
                    setInputValue({
                        username:'',
                         email:'',
@@ -200,7 +200,7 @@ const ShowRegistrationForm =()=>{
             </div>
             <div className="form-group ">
                 
-                <button name=""className="btn btn-primary btn-block" placeholder="Username" type="s   ubmit"> Register</button>
+                <button name=""className="btn btn-warning btn-block" placeholder="Username" type="s   ubmit"> Register</button>
             </div> 
             <p className="text-center ">Already Registered? <Link to ="/login">Login</Link></p>
                 

@@ -4,7 +4,7 @@ import ErrorMsg from '../Alerts/errorMsg';
 import Loading from '../Loading/loading';
 import isEmpty from 'validator/lib/isEmpty';
 import isEmail from 'validator/lib/isEmail';
-import Login from '../../auth/Login';
+import Login from '../../Api/auth/Login';
 import {isAuthenticated, setAuth} from '../../utils/auth';
 
 const LoginForm =()=>{
@@ -153,7 +153,7 @@ const LoginForm =()=>{
             
             <div className="form-group ">
                 
-                <button name=""className="btn btn-primary btn-block" placeholder="Username" type="submit"> Login</button>
+                <button name=""className="btn btn-warning btn-block" placeholder="Username" type="submit"> Login</button>
             </div> 
             <p className="text-center "> Don't have an account? <Link to ="/register">Register Here</Link></p>
                 
