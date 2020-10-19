@@ -1,6 +1,11 @@
 import React,{Fragment, useState} from 'react';
 import WelcomeAdmin from './WelcomeAdmin';
 import  createCategory from '../../Api/Category';
+import  createProduct from '../../Api/Category';
+import isEmpty from 'validator/lib/isEmpty';
+import errorMsg from '../Alerts/errorMsg';
+import successMsg from '../Alerts/successMsg';
+import loading from '../Loading/loading';
 
 
 const AdminDashboard=()=>{
@@ -9,34 +14,132 @@ const AdminDashboard=()=>{
      */
     const [category,setCategory] =useState('');
 
+    //errorMsg,successMsg,loading state
+    const [errMsgState, setErrMsgState] = useState('');
+    const [successMsgState, setSuccessMsgState]=useState('');
+    const [loadingState, setLoadingState]=useState(false);
+
+    //Setup productData state
+    const [productData ,setProductData]=useState({
+        prodTitle:"",
+        prodDesc:"",
+        prodImg:null,
+        prodPrice:"",
+        prodInstock:""
+    })
+    //destructure productData state
+    const{prodTitle,prodDesc,prodImg,prodPrice,prodInstock} =productData;
+
+    //handle Product input value changes
+    const handleProdChange=(evt)=>{
+        setErrMsgState("");
+        setSuccessMsgState("");
+        setLoadingState("");
+        const value=evt.target.value;
+        const name=evt.target.name;
+        setProductData({
+            ...productData,
+            [name]:value
+        });
+
+        console.log(value);
+   }
+
+   const handleProdImg=(evt)=>{
+       console.log(evt.target.files[0]);
+        const value=evt.target.files[0];
+        const name=evt.target.name;
+       setProductData({
+           ...productData,
+           [name]:value,
+       });
+   }
+
+   const handleProdSubmit=(evt)=>{
+       evt.preventDefault();
+
+       //added client side validation of product form
+       if (prodImg===null ){
+           setErrMsgState("Please Select an Image");
+
+       }else if (isEmpty(prodTitle) || isEmpty(prodDesc) || isEmpty(prodPrice)){
+             setErrMsgState("All fields are required!");
+       }else if(isEmpty(prodInstock)){
+            setErrMsgState("Please select product quantity in-stock!");
+       }else{
+           //on success
+            let formInputData = new FormData();
+            formInputData.append('productData',productData);
+            formInputData.append('prodTitle',prodTitle);
+            formInputData.append('prodPrice',prodPrice);
+            formInputData.append('prodImg',prodImg);
+            formInputData.append('prodDesc',prodDesc);
+            formInputData.append('prodInstock',prodInstock);
+
+            //call prod api
+                createProduct(formInputData)
+                .then((response)=>{
+                    setSuccessMsgState(response.formInputData.successMessage);
+
+                })
+                .catch((err)=>{
+                    setErrMsgState(err.response.formInputData.errorMessage);
+                })
+       }
+
+   }
+
 
 /**
  * Event handler for add new category
  */
     const handleCategoryChange=(evt)=>{
+        //reset states
+        setErrMsgState("");
+        setSuccessMsgState("");
+        setLoadingState(false);
         const value =evt.target.value;
         setCategory(value);  
     }
 
+
+    const handleMsg=(evt)=>{
+        setErrMsgState("");
+        setSuccessMsgState("")
+    }
     const handleCategorySubmit=(evt)=>{
         evt.preventDefault();
+        if (isEmpty(category)){
+            setErrMsgState("Please enter category");
 
-        const data ={category};
-       
-        //api call
-        createCategory(data);
-         
+        }else{
+            
+            const data={category}
+            setLoadingState(true);
+            createCategory(data).then(response=>{
+                setLoadingState(false);
+                setCategory("");
+                setSuccessMsgState(response.data.successMessage);
+            }).catch(err=>{
+                setErrMsgState(err.response.data.errorMessage);
+               
 
-    }
+        })
+    }}
 
+  
+/**Action btn function */
     const actionBtns=()=>(
          <div className="bg-light">
         <div className="container">
         <div className="row">
             <div className="col-md-6 mt-1 py-2">
-                    <button className="btn btn-outline-info btn-block" data-toggle="modal" data-target="#addNewCategory">
+                {
+                /*<button className="btn btn-outline-info btn-block" data-toggle="modal" data-target="#addNewCategory">
                             Add New Category
-                    </button>
+                </button>*/
+                }
+                    
             </div>
             <div className="col-md-6 mt-1 py-2">
                 <button className="btn btn-outline-info btn-block  " data-toggle="modal" data-target="#addNewProduct">
@@ -51,23 +154,34 @@ const AdminDashboard=()=>{
     </div>
     </div>
     );
-
+    /**Add New CAtegory Function */
+  
     const addNewCategory=()=>(
-    <div className='modal' id='addNewCategory'>
+
+    <div className='modal' id='addNewCategory' onClick={handleMsg}>
             <div className='modal-dialog modal-dialog-centered modal-lg'>
                 <div className="modal-content">
                     <form onSubmit={handleCategorySubmit}>
                     <div className="modal-header  bg-info text-white">
+                        
                         <h5>Add New Category</h5>
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         </div>
                     <div className="modal-body my-3">
-                        
-                            <label className="text-secondary">Category</label>
-                            <input type='text' className="form-control" name="category" value={category}
-                            onChange={handleCategoryChange}/>
+                        { errMsgState && errorMsg(errMsgState)}
+                        { successMsgState && successMsg(successMsgState)}
+                        {
+                            loadingState? loading():(
+                                <Fragment>
+                                    <label className="text-secondary">Category</label>
+                                    <input type='text' className="form-control" name="category" value={category}
+                                    onChange={handleCategoryChange}/>
+                                </Fragment>
+                            )
+                        }
+                            
                         
                     </div>
                     <div className="modal-footer">
@@ -89,7 +203,7 @@ const AdminDashboard=()=>{
     <div className='modal' id='addNewProduct'>
             <div className='modal-dialog modal-dialog-centered modal-lg'>
                 <div className="modal-content">
-                    <form >
+                    <form onSubmit={handleProdSubmit}>
                     <div className="modal-header  bg-info text-white">
                         <h5 className="modal-title">Add New Product</h5>
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
@@ -97,33 +211,40 @@ const AdminDashboard=()=>{
                         </button>
                         </div>
                     <div className="modal-body my-3">
+                          { errMsgState && errorMsg(errMsgState)}
+                        { successMsgState && successMsg(successMsgState)}
+                        {
+                            loadingState? loading():(
                         
                             <Fragment>
                                 <div className="customs-file-input col-md-12 ">
-                                    <input type='file' className='custom-file-input'/>
+                                    <input type='file' className='custom-file-input' name="prodImg"  onChange={handleProdImg}/>
                                     <label className="custom-file-label">Choose Img</label>
                                 </div>
                                 <div className="form-group mt-2">
                                     <label className="text-secondary">
                                         Title
                                     </label>
-                                    <input type='text' className="form-control"/>
+                                    <input type='text' className="form-control" name="prodTitle" value={prodTitle}  onChange={handleProdChange}/>
                                 </div>
                                 <div className="form-group">
                                     <label className="text-secondary">
                                         Description
                                     </label>
-                                    <textarea rows='3' className="form-control"></textarea>
+                                    <textarea rows='3' className="form-control" name="prodDesc" value={prodDesc} onChange={handleProdChange}></textarea>
                                 </div>
                                
                                 <div className="form-group">
                                     <label className="text-secondary">
-                                        Price
+                                        Price: GHC
                                     </label>
-                                    <input type='text' className="form-control"/>
+                                    <input type='text' className="form-control" name="prodPrice" value={prodPrice} onChange={handleProdChange}/>
                                 </div>
                                 <div className="form-row">
+                                    {/*
+                                    
                                     <div className="form-group col-md-6">
+                                        
                                         <label className="text-secondary">
                                         Category
                                         </label>
@@ -136,16 +257,19 @@ const AdminDashboard=()=>{
                                             <option>legumes</option>
                                         </select>
                                     </div>
+                                    */}
+                                    
                                     <div className="form-group col-md-6">
                                         <label className="text-secondary">
-                                        Quantity (Kg)
+                                        Instock: (Kg)
                                     </label>
-                                            <input type="number" min="0" max="100000" className="form-control"/>
+                                            <input type="number" min="0" max="100000" className="form-control" name="prodInstock" value={prodInstock} onChange={handleProdChange}/>
                                                      
                                     </div>
                                     
                                     </div>
-                                    <div className="form-row">
+                                    {/**
+                                     * <div className="form-row">
                                     <div className="form-group col-md-6">
                                         <label className="text-secondary">
                                         Location
@@ -168,9 +292,11 @@ const AdminDashboard=()=>{
                                     </div>
                                     
                                     </div>
+                                     */}
+                                   
                                 
                             </Fragment>
-                        
+                            )  }
                     </div>
                     <div className="modal-footer">
                          <button className="btn btn-secondary"  data-dismiss="modal" >
