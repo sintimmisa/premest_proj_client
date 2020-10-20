@@ -1,7 +1,7 @@
 import React,{Fragment, useState} from 'react';
 import WelcomeAdmin from './WelcomeAdmin';
 import  createCategory from '../../Api/Category';
-import  createProduct from '../../Api/Category';
+import  createProduct from '../../Api/Product';
 import isEmpty from 'validator/lib/isEmpty';
 import errorMsg from '../Alerts/errorMsg';
 import successMsg from '../Alerts/successMsg';
@@ -69,7 +69,7 @@ const AdminDashboard=()=>{
        }else{
            //on success
             let formInputData = new FormData();
-            formInputData.append('productData',productData);
+            //formInputData.append('productData',productData);
             formInputData.append('prodTitle',prodTitle);
             formInputData.append('prodPrice',prodPrice);
             formInputData.append('prodImg',prodImg);
@@ -79,11 +79,21 @@ const AdminDashboard=()=>{
             //call prod api
                 createProduct(formInputData)
                 .then((response)=>{
-                    setSuccessMsgState(response.formInputData.successMessage);
+                    //clear all input fields
+                    setProductData({
+                            prodTitle:"",
+                            prodDesc:"",
+                            prodImg:null,
+                            prodPrice:"",
+                            prodInstock:""
+
+                    });
+                    setSuccessMsgState(response.data.successMessage);
 
                 })
                 .catch((err)=>{
-                    setErrMsgState(err.response.formInputData.errorMessage);
+                    console.log(err);
+                    setErrMsgState(err.response.data.errorMessage);
                 })
        }
 
@@ -218,8 +228,9 @@ const AdminDashboard=()=>{
                         
                             <Fragment>
                                 <div className="customs-file-input col-md-12 ">
-                                    <input type='file' className='custom-file-input' name="prodImg"  onChange={handleProdImg}/>
                                     <label className="custom-file-label">Choose Img</label>
+                                    <input type='file' className='custom-file-input' name="prodImg"  onChange={handleProdImg}/>
+                                    
                                 </div>
                                 <div className="form-group mt-2">
                                     <label className="text-secondary">
