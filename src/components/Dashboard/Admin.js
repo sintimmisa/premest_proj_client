@@ -1,7 +1,9 @@
 import React,{Fragment, useState} from 'react';
+import {Link} from 'react-router-dom'
 import WelcomeAdmin from './WelcomeAdmin';
 import  createCategory from '../../Api/Category';
-import  createProduct from '../../Api/Product';
+import  {createProduct} from '../../Api/Product';
+import {getAppProduct} from '../../Api/Product'
 import isEmpty from 'validator/lib/isEmpty';
 import errorMsg from '../Alerts/errorMsg';
 import successMsg from '../Alerts/successMsg';
@@ -25,7 +27,8 @@ const AdminDashboard=()=>{
         prodDesc:"",
         prodImg:null,
         prodPrice:"",
-        prodInstock:""
+        prodInstock:"",
+        
     })
     //destructure productData state
     const{prodTitle,prodDesc,prodImg,prodPrice,prodInstock} =productData;
@@ -57,7 +60,9 @@ const AdminDashboard=()=>{
 
    const handleProdSubmit=(evt)=>{
        evt.preventDefault();
-
+       setSuccessMsgState(false);
+       setLoadingState(false);
+         setErrMsgState(false);
        //added client side validation of product form
        if (prodImg===null ){
            setErrMsgState("Please Select an Image");
@@ -77,6 +82,7 @@ const AdminDashboard=()=>{
             formInputData.append('prodInstock',prodInstock);
 
             //call prod api
+            setLoadingState(true);
                 createProduct(formInputData)
                 .then((response)=>{
                     //clear all input fields
@@ -88,10 +94,13 @@ const AdminDashboard=()=>{
                             prodInstock:""
 
                     });
+                     setLoadingState(false);
+                     setErrMsgState(false);
                     setSuccessMsgState(response.data.successMessage);
 
                 })
                 .catch((err)=>{
+                    setSuccessMsgState(false);
                     console.log(err);
                     setErrMsgState(err.response.data.errorMessage);
                 })
@@ -152,8 +161,8 @@ const AdminDashboard=()=>{
                     
             </div>
             <div className="col-md-6 mt-1 py-2">
-                <button className="btn btn-outline-info btn-block  " data-toggle="modal" data-target="#addNewProduct">
-                   Add New Product
+                <button className="btn btn-outline-info btn-block" data-toggle="modal" data-target="#addNewProduct">
+                            Add Product
                 </button>
             </div>
 

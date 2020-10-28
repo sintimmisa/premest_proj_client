@@ -12,9 +12,11 @@ import RegisterPage from './components/RegisterPage';
 import LoginPage from './components/LoginPage';
 import NotFoundPage from './components/NotFoundPage';
 import AdminDashboard from './components/Dashboard/Admin';
-import UserDashboard from './components/Dashboard/User';
+import UserDashboard from './components/Dashboard/UserDashboard';
 import AdminRoute from './components/ProtectedRoutes/AdminRoute';
 import UserRoute from './components/ProtectedRoutes/UserRoute';
+import AddProduct from './components/Dashboard/AddProduct';
+import ShowProduct from './components/Dashboard/getProduct';
 
 
 
@@ -29,8 +31,10 @@ function App() {
         <Route exact path='/' component={HomePage}/>
         <Route exact path='/register' component={RegisterPage}/>
         <Route exact path='/login' component={LoginPage}/>
+         <Route exact path='/product/getProduct' component={ShowProduct}/>
         <AdminRoute exact path='/admin/dashboard' component={AdminDashboard}/>
         <UserRoute exact path='/user/dashboard' component={UserDashboard}/>
+        <AdminRoute exact path='/admin/product' component={AddProduct}/>
        
         <Route  component={NotFoundPage}/>
       </Switch>
